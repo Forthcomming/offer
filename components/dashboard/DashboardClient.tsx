@@ -23,6 +23,7 @@ import {
   saveReminderTaskStateMap,
 } from "@/lib/storage";
 import { NewsPanel } from "@/components/news/NewsPanel";
+import { AppShell } from "@/components/layout/AppShell";
 import {
   buildFollowUpDraft,
   buildFollowUpQueue,
@@ -343,41 +344,44 @@ export function DashboardClient() {
   };
 
   return (
-    <div className="relative z-10 min-h-screen">
-      <HeaderBar onNew={openCreate} />
-      <StatsBar
-        apps={apps}
-        todayYmd={todayYmd}
-        taskStates={taskStates}
-        onOpenApplication={openEdit}
-        onTaskAction={handleTaskAction}
-      />
-      {apps.length === 0 ? (
-        <div className="mx-auto max-w-[1600px] px-4 pb-4 sm:px-6">
-          <div className="rounded-2xl border border-dashed border-white/35 bg-[var(--glass-bg)] px-5 py-6 text-center shadow-[var(--glass-shadow)] backdrop-blur-2xl">
-            <p className="text-sm font-medium text-slate-900">
-              还没有申请记录
-            </p>
-            <p className="mt-1 text-xs text-slate-600">
-              点击右上角「添加申请」开始；可在「材料中心」先维护简历版本。
-            </p>
-            <button
-              type="button"
-              onClick={openCreate}
-              className="mt-4 inline-flex rounded-xl border border-white/30 bg-indigo-500/80 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-indigo-600/25 transition hover:bg-indigo-600/90"
-            >
-              添加第一个申请
-            </button>
+    <AppShell title="看板">
+      <div className="space-y-4">
+        <HeaderBar onNew={openCreate} />
+        <StatsBar
+          apps={apps}
+          todayYmd={todayYmd}
+          taskStates={taskStates}
+          onOpenApplication={openEdit}
+          onTaskAction={handleTaskAction}
+        />
+        {apps.length === 0 ? (
+          <div className="mx-auto max-w-[1600px] px-4 pb-4 sm:px-6">
+            <div className="rounded-2xl border border-dashed border-white/35 bg-[var(--glass-bg)] px-5 py-6 text-center shadow-[var(--glass-shadow)] backdrop-blur-2xl">
+              <p className="text-sm font-medium text-slate-900">
+                还没有申请记录
+              </p>
+              <p className="mt-1 text-xs text-slate-600">
+                点击「添加申请」开始；可在「材料中心」先维护简历版本。
+              </p>
+              <button
+                type="button"
+                onClick={openCreate}
+                className="mt-4 inline-flex rounded-xl border border-white/30 bg-indigo-500/80 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-indigo-600/25 transition hover:bg-indigo-600/90"
+              >
+                添加第一个申请
+              </button>
+            </div>
           </div>
-        </div>
-      ) : null}
-      <KanbanBoard
-        apps={apps}
-        resumeNameById={resumeNameById}
-        onEdit={openEdit}
-        onStageChange={handleStageChange}
-      />
-      <NewsPanel />
+        ) : null}
+        <KanbanBoard
+          apps={apps}
+          resumeNameById={resumeNameById}
+          onEdit={openEdit}
+          onStageChange={handleStageChange}
+        />
+        <NewsPanel />
+      </div>
+
       <ApplicationForm
         open={formOpen}
         application={editing}
@@ -393,6 +397,6 @@ export function DashboardClient() {
       />
       <AiFab onClick={() => setAiOpen(true)} />
       <AiDialog open={aiOpen} onClose={() => setAiOpen(false)} />
-    </div>
+    </AppShell>
   );
 }

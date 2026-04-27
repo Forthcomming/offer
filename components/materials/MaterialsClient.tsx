@@ -2,9 +2,9 @@
 
 import type { FormEvent } from "react";
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
 import { GlassButton } from "@/components/ui/GlassButton";
 import { GlassCard } from "@/components/ui/GlassCard";
+import { AppShell } from "@/components/layout/AppShell";
 import { countApplicationsUsingResume } from "@/lib/materials-usage";
 import type { ResumeVersion } from "@/lib/types";
 import {
@@ -162,30 +162,29 @@ export function MaterialsClient() {
   };
 
   return (
-    <div className="relative z-10 min-h-screen pb-16">
-      <header className="sticky top-0 z-20 border-b border-white/25 bg-[var(--glass-bg)] shadow-[var(--glass-shadow)] backdrop-blur-2xl">
-        <div className="mx-auto flex max-w-[960px] flex-wrap items-center justify-between gap-3 px-4 py-4 sm:px-6">
+    <AppShell
+      title="材料中心"
+      headerRight={
+        <GlassButton type="button" variant="primary" onClick={openCreate}>
+          新建版本
+        </GlassButton>
+      }
+    >
+      <div className="mx-auto max-w-[960px] px-1 sm:px-0">
+        <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
           <div>
             <p className="text-xs font-medium uppercase tracking-wide text-slate-600">
               Materials
             </p>
             <h1 className="text-xl font-semibold text-slate-900">材料管理中心</h1>
           </div>
-          <div className="flex flex-wrap gap-2">
-            <Link
-              href="/"
-              className="inline-flex items-center justify-center rounded-xl border border-white/30 bg-white/15 px-3 py-2 text-sm font-medium text-slate-800 shadow-md transition hover:bg-white/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400/60"
-            >
-              返回看板
-            </Link>
+          <div className="hidden sm:block">
             <GlassButton type="button" variant="primary" onClick={openCreate}>
               新建版本
             </GlassButton>
           </div>
         </div>
-      </header>
 
-      <main className="mx-auto max-w-[960px] px-4 py-6 sm:px-6">
         {materials.length === 0 ? (
           <GlassCard className="border-dashed border-white/40 p-8 text-center shadow-lg">
             <p className="text-sm font-medium text-slate-900">暂无简历版本</p>
@@ -271,7 +270,7 @@ export function MaterialsClient() {
             ))}
           </ul>
         )}
-      </main>
+      </div>
 
       {formOpen ? (
         <div
@@ -405,6 +404,6 @@ export function MaterialsClient() {
           </GlassCard>
         </div>
       ) : null}
-    </div>
+    </AppShell>
   );
 }

@@ -35,6 +35,12 @@ export interface Application {
   stage: Stage;
   deadline: string | null;
   followUpDate: string | null;
+  /** 笔试时间（datetime-local: YYYY-MM-DDTHH:mm） */
+  writtenAt?: string | null;
+  /** 测评时间（datetime-local: YYYY-MM-DDTHH:mm） */
+  assessmentAt?: string | null;
+  /** 面试时间（datetime-local: YYYY-MM-DDTHH:mm） */
+  interviewAt?: string | null;
   notes: string;
   jobUrl: string | null;
   /** 关联的简历材料版本 */

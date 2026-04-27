@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type PointerEvent } from "react";
-import Link from "next/link";
+import { createPortal } from "react-dom";
 import { GlassButton } from "@/components/ui/GlassButton";
 
 type HeaderBarProps = {
@@ -16,10 +16,15 @@ export function HeaderBar({ onNew }: HeaderBarProps) {
   const [pullOffset, setPullOffset] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const [showOfferImage, setShowOfferImage] = useState(false);
+  const [offerImagePos, setOfferImagePos] = useState<{ left: number; top: number } | null>(
+    null,
+  );
+  const [mounted, setMounted] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [isTriggered, setIsTriggered] = useState(false);
 
   const startYRef = useRef(0);
+  const ringWrapRef = useRef<HTMLDivElement | null>(null);
   const imageTimerRef = useRef<number | null>(null);
   const toastTimerRef = useRef<number | null>(null);
 
@@ -31,9 +36,36 @@ export function HeaderBar({ onNew }: HeaderBarProps) {
     [],
   );
 
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!showOfferImage) return;
+    const el = ringWrapRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    setOfferImagePos({
+      left: rect.left + rect.width / 2,
+      top: rect.bottom + 10,
+    });
+  }, [showOfferImage]);
+
+  const computeOfferImagePos = () => {
+    const el = ringWrapRef.current;
+    if (!el) return null;
+    const rect = el.getBoundingClientRect();
+    return {
+      left: rect.left + rect.width / 2,
+      top: rect.bottom + 10,
+    };
+  };
+
   const triggerRingReward = () => {
     if (isTriggered) return;
     setIsTriggered(true);
+    const pos = computeOfferImagePos();
+    if (pos) setOfferImagePos(pos);
     setShowOfferImage(true);
     setShowToast(true);
 
@@ -70,7 +102,7 @@ export function HeaderBar({ onNew }: HeaderBarProps) {
   };
 
   return (
-    <header className="sticky top-0 z-20 border-b border-white/25 bg-[var(--glass-bg)] shadow-[var(--glass-shadow)] backdrop-blur-2xl backdrop-saturate-150">
+    <div className="rounded-2xl border border-white/25 bg-[var(--glass-bg)] shadow-[var(--glass-shadow)] backdrop-blur-2xl backdrop-saturate-150">
       <div className="relative z-10 mx-auto flex max-w-[1600px] flex-wrap items-center justify-between gap-4 px-4 py-4 sm:px-6">
         <div>
           <p className="text-xs font-medium uppercase tracking-wide text-slate-600">
@@ -81,7 +113,7 @@ export function HeaderBar({ onNew }: HeaderBarProps) {
           </h1>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <div className="relative mr-1 h-[58px] w-16 shrink-0">
+          <div ref={ringWrapRef} className="relative mr-1 h-[58px] w-16 shrink-0">
             {!isTriggered ? (
               <div
                 className={`offer-ring-float-wrap pointer-events-none absolute inset-0 flex flex-col items-center justify-start pt-0.5 ${
@@ -109,38 +141,38 @@ export function HeaderBar({ onNew }: HeaderBarProps) {
                 </button>
               </div>
             ) : null}
-            {showOfferImage ? (
-              <div className="offer-image-pop pointer-events-none absolute -left-20 top-16 z-30 rounded-xl border border-white/45 bg-white/55 p-1 shadow-xl backdrop-blur-md">
+          </div>
+          <GlassButton type="button" variant="primary" onClick={onNew}>
+            添加申请
+          </GlassButton>
+        </div>
+      </div>
+      {mounted && showOfferImage && offerImagePos
+        ? createPortal(
+            <div
+              className="pointer-events-none fixed z-50"
+              style={{
+                left: offerImagePos.left,
+                top: offerImagePos.top,
+                transform: "translateX(-50%)",
+              }}
+            >
+              <div className="offer-image-pop rounded-xl border border-white/45 bg-white/55 p-1 shadow-xl backdrop-blur-md">
                 <img
                   src={OFFER_TOWER_IMAGE}
                   alt="offer大楼"
                   className="h-auto w-auto rounded-lg"
                 />
               </div>
-            ) : null}
-          </div>
-          <Link
-            href="/materials"
-            className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/30 bg-white/15 px-3 py-2 text-sm font-medium text-slate-800 shadow-md shadow-slate-900/5 transition hover:bg-white/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400/60"
-          >
-            材料中心
-          </Link>
-          <Link
-            href="/email"
-            className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/30 bg-white/15 px-3 py-2 text-sm font-medium text-slate-800 shadow-md shadow-slate-900/5 transition hover:bg-white/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400/60"
-          >
-            邮箱中心
-          </Link>
-          <GlassButton type="button" variant="primary" onClick={onNew}>
-            添加申请
-          </GlassButton>
-        </div>
-      </div>
+            </div>,
+            document.body,
+          )
+        : null}
       {showToast ? (
         <div className="offer-toast pointer-events-none fixed right-4 top-20 z-50 rounded-xl border border-white/45 bg-white/70 px-4 py-2 text-sm font-medium text-indigo-950 shadow-xl backdrop-blur-lg sm:right-6">
           今天offer大楼镇楼，offer马上到！
         </div>
       ) : null}
-    </header>
+    </div>
   );
 }

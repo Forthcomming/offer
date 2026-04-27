@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { GlassButton } from "@/components/ui/GlassButton";
 import { GlassCard } from "@/components/ui/GlassCard";
+import { AppShell } from "@/components/layout/AppShell";
 import { parseEmail } from "@/lib/email/parseEmail";
 import { APPLICATION_PREFILL_SESSION_KEY } from "@/lib/email/prefill";
 import type {
@@ -302,25 +302,16 @@ export function EmailCenterClient() {
   };
 
   return (
-    <div className="relative z-10 min-h-screen pb-16">
-      <header className="sticky top-0 z-20 border-b border-white/25 bg-[var(--glass-bg)] shadow-[var(--glass-shadow)] backdrop-blur-2xl">
-        <div className="mx-auto flex max-w-[960px] flex-wrap items-center justify-between gap-3 px-4 py-4 sm:px-6">
+    <AppShell title="邮箱中心">
+      <div className="mx-auto max-w-[960px] space-y-6 px-1 sm:px-0">
+        <div className="flex flex-wrap items-end justify-between gap-3">
           <div>
             <p className="text-xs font-medium uppercase tracking-wide text-slate-600">
               Email Center
             </p>
             <h1 className="text-xl font-semibold text-slate-900">邮箱中心</h1>
           </div>
-          <Link
-            href="/"
-            className="inline-flex items-center justify-center rounded-xl border border-white/30 bg-white/15 px-3 py-2 text-sm font-medium text-slate-800 shadow-md transition hover:bg-white/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400/60"
-          >
-            返回看板
-          </Link>
         </div>
-      </header>
-
-      <main className="mx-auto max-w-[960px] space-y-6 px-4 py-6 sm:px-6">
         <GlassCard className="border-amber-300/40 bg-amber-400/15 p-4 text-sm text-amber-950 shadow-lg">
           <strong className="font-semibold">演示说明：</strong>
           当前未连接真实邮箱 IMAP/API。可使用「同步演示邮件」或「粘贴邮件」体验解析与应用到看板流程；连接真实邮箱需后续服务端接入。
@@ -602,7 +593,7 @@ export function EmailCenterClient() {
             </ul>
           )}
         </GlassCard>
-      </main>
-    </div>
+      </div>
+    </AppShell>
   );
 }

@@ -153,6 +153,9 @@ function normalizeApplication(a: Application): Application {
   return {
     ...a,
     resumeVersionId: a.resumeVersionId ?? null,
+    writtenAt: a.writtenAt ?? null,
+    assessmentAt: a.assessmentAt ?? null,
+    interviewAt: a.interviewAt ?? null,
   };
 }
 
@@ -163,6 +166,16 @@ function isApplication(x: unknown): x is Application {
     o.resumeVersionId === undefined ||
     o.resumeVersionId === null ||
     typeof o.resumeVersionId === "string";
+  const writtenOk =
+    o.writtenAt === undefined || o.writtenAt === null || typeof o.writtenAt === "string";
+  const assessmentOk =
+    o.assessmentAt === undefined ||
+    o.assessmentAt === null ||
+    typeof o.assessmentAt === "string";
+  const interviewOk =
+    o.interviewAt === undefined ||
+    o.interviewAt === null ||
+    typeof o.interviewAt === "string";
   return (
     typeof o.id === "string" &&
     typeof o.company === "string" &&
@@ -173,6 +186,9 @@ function isApplication(x: unknown): x is Application {
     STAGES.includes(o.stage as Stage) &&
     (o.deadline === null || typeof o.deadline === "string") &&
     (o.followUpDate === null || typeof o.followUpDate === "string") &&
+    writtenOk &&
+    assessmentOk &&
+    interviewOk &&
     typeof o.notes === "string" &&
     (o.jobUrl === null || typeof o.jobUrl === "string") &&
     typeof o.updatedAt === "string" &&

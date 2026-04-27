@@ -26,6 +26,9 @@ function newDraft(): Application {
     stage: "todo",
     deadline: null,
     followUpDate: null,
+    writtenAt: null,
+    assessmentAt: null,
+    interviewAt: null,
     notes: "",
     jobUrl: null,
     resumeVersionId: null,
@@ -91,6 +94,9 @@ export function ApplicationForm({
       jobUrl: draft.jobUrl?.trim() ? draft.jobUrl.trim() : null,
       deadline: draft.deadline || null,
       followUpDate: draft.followUpDate || null,
+      writtenAt: draft.writtenAt?.trim() ? draft.writtenAt.trim() : null,
+      assessmentAt: draft.assessmentAt?.trim() ? draft.assessmentAt.trim() : null,
+      interviewAt: draft.interviewAt?.trim() ? draft.interviewAt.trim() : null,
       resumeVersionId: resumeOk,
       updatedAt: now,
     };
@@ -264,6 +270,48 @@ export function ApplicationForm({
                   setDraft((d) => ({
                     ...d,
                     followUpDate: e.target.value || null,
+                  }))
+                }
+                className="glass-field mt-1 w-full"
+              />
+            </label>
+            <label className="block sm:col-span-2">
+              <span className="text-xs font-medium text-slate-600">笔试时间（可选）</span>
+              <input
+                type="datetime-local"
+                value={draft.writtenAt ?? ""}
+                onChange={(e) =>
+                  setDraft((d) => ({
+                    ...d,
+                    writtenAt: e.target.value || null,
+                  }))
+                }
+                className="glass-field mt-1 w-full"
+              />
+            </label>
+            <label className="block sm:col-span-2">
+              <span className="text-xs font-medium text-slate-600">测评时间（可选）</span>
+              <input
+                type="datetime-local"
+                value={draft.assessmentAt ?? ""}
+                onChange={(e) =>
+                  setDraft((d) => ({
+                    ...d,
+                    assessmentAt: e.target.value || null,
+                  }))
+                }
+                className="glass-field mt-1 w-full"
+              />
+            </label>
+            <label className="block sm:col-span-2">
+              <span className="text-xs font-medium text-slate-600">面试时间（可选）</span>
+              <input
+                type="datetime-local"
+                value={draft.interviewAt ?? ""}
+                onChange={(e) =>
+                  setDraft((d) => ({
+                    ...d,
+                    interviewAt: e.target.value || null,
                   }))
                 }
                 className="glass-field mt-1 w-full"
